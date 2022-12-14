@@ -1,6 +1,7 @@
 import {
   StyleSheet,
   Text,
+  TextInput,
   View,
   ScrollView,
   SafeAreaView,
@@ -9,9 +10,8 @@ import {
   Modal,
   Animated,
   ImageBackground,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import React, { useState, useRef, useEffect } from "react";
@@ -21,20 +21,39 @@ import { Camera, CameraType } from "expo-camera";
 import { Dimensions } from "react-native";
 import CameraPreview from "./cameraPreview";
 import { Ionicons } from "@expo/vector-icons";
-import f from "./scanner";
+import { readText } from "../service/firebase";
+import ScannedTextView from "./scannedTextView";
 
 const ChooseModal = (props) => {
   const [image, setImage] = useState(null);
-  const [type, setType] = useState(CameraType.front);
+  const [type, setType] = useState(CameraType.back);
   const [startCamera, setStartCamera] = useState(false);
   const [previewVisible, setPreviewVisible] = useState(false);
   const [capturedImage, setCapturedImage] = useState(null);
-  
-  useEffect(() => {
-    if(!startCamera && capturedImage != null)
-      f(capturedImage);
-  }, [startCamera])
+  const [punjabi, setPunjabi] = useState(null);
 
+  useEffect(() => {
+    async function getText() {
+      try {
+        const fImg = image != null ? image.base64 : capturedImage.base64;
+        const res = await readText(fImg);
+        setPunjabi(res);
+      } catch (err) {
+        console.log("err");
+      }
+    }
+    if (!startCamera && (capturedImage != null || image != null)) getText();
+  }, [startCamera, image]);
+
+  useEffect(() => {
+      if(!props.modalVisible){
+        setStartCamera(false);
+        setPreviewVisible(false);
+        setCapturedImage(null);
+        setImage(null);
+        setPunjabi("");
+      }
+  }, [props.modalVisible])
   const __retakePicture = () => {
     setCapturedImage(null);
     setPreviewVisible(false);
@@ -59,7 +78,7 @@ const ChooseModal = (props) => {
 
   const __takePicture = async () => {
     if (!camera) return;
-    const photo = await camera.takePictureAsync({base64: true});
+    const photo = await camera.takePictureAsync({ base64: true });
     setPreviewVisible(true);
     setCapturedImage(photo);
   };
@@ -67,13 +86,14 @@ const ChooseModal = (props) => {
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
+      base64: true,
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
     });
     if (!result.cancelled) {
-      setImage(result.uri);
+      setImage(result);
     }
   };
 
@@ -135,27 +155,27 @@ const ChooseModal = (props) => {
             </SafeAreaView>
           </Camera>
         )
-      ) : capturedImage ? (
-        <SafeAreaView style={styles.scannedImg}>
-          <ImageBackground
-            source={{ uri: capturedImage && capturedImage.uri }}
-            style={{
-              width: 300,
-              height: 400,
-            }}
-          />
-              <ActivityIndicator size="large" color="#00ff00"/>
-              <Text>Scanning</Text>
-        </SafeAreaView>
+      ) : capturedImage || image ? (
+          <ScannedTextView image={image} capturedImage={capturedImage} punjabi={punjabi} setModalVisible={props.setModalVisible}/>
       ) : (
         <SafeAreaView style={styles.wrapper2}>
+          <View
+            style={styles.crossSection}
+          >
+            <Text style={{fontSize: 25, fontWeight: '500'}}>Scan</Text>
+            <TouchableOpacity  onPress={() => props.setModalVisible(false)}>
+              <Entypo name="cross" size={30} color="black" />
+            </TouchableOpacity>
+          </View>
           <TouchableOpacity
             onPress={() => {
               __startCamera();
             }}
             style={styles.container}
           >
+            <View style={styles.circle}>
             <Feather name="camera" size={24} color="black" />
+              </View>
             <Text style={styles.text}>Take Picture</Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -164,14 +184,22 @@ const ChooseModal = (props) => {
             }}
             style={styles.container}
           >
+            <View style={styles.circle}>
             <FontAwesome name="photo" size={24} color="black" />
+            </View>
             <Text style={styles.text}>Choose from Gallery</Text>
           </TouchableOpacity>
-          <View style={styles.cross}>
-            <TouchableOpacity onPress={() => props.setModalVisible(false)}>
-              <Entypo name="cross" size={30} color="black" />
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity
+            onPress={() => {
+              pickImage();
+            }}
+            style={styles.container}
+          >
+            <View style={styles.circle}>
+            <Ionicons name="document-outline" size={28} color="black" />
+            </View>
+            <Text style={styles.text}>Document upload</Text>
+          </TouchableOpacity>
         </SafeAreaView>
       )}
     </Modal>
@@ -180,7 +208,7 @@ const ChooseModal = (props) => {
 const styles = StyleSheet.create({
   wrapper: {
     width: "100%",
-    height: "100%%",
+    height: 60,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -188,23 +216,27 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     width: "100%",
-    height: "35%%",
-    alignItems: "center",
-    justifyContent: "center",
+    height: "40%",
+    alignItems: "flex-start",
+    backgroundColor: "white",
+    borderRadius: 20,
   },
   text: {
-    fontSize: 30,
+    fontSize: 20,
   },
   container: {
-    flexDirection: "row-reverse",
+    flexDirection: "row",
+    alignItems: "center",
+    width: "100%",
+    padding: 10,
+    marginTop: 10
+  },
+  crossSection: {
+    flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    width: "80%",
-  },
-  cross: {
-    position: "absolute",
-    top: 0,
-    left: 0,
+    padding: 12,
+    width: "100%",
   },
   camContainer: {
     flex: 1,
@@ -249,12 +281,26 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   scannedImg: {
-    width: 400,
-    height: 500,
+    width: "100%",
+    height: "100%",
     position: "absolute",
-    justifyContent: "center",
-    alignItems: "center",
     zIndex: 999,
+    backgroundColor: "#FFEEEB",
   },
+  openButton: {
+    backgroundColor: "#F5694D",
+    padding: 10,
+    borderRadius: 8,
+  },
+  circle: {
+    padding: 8,
+    height: 60,
+    width: 60,
+    borderRadius: '50%',
+    backgroundColor: '#F2F2F2',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 8
+  }
 });
 export default ChooseModal;

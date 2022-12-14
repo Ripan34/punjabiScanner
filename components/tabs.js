@@ -1,15 +1,19 @@
-import { StyleSheet, Text, View, TouchableOpacity, Animated,} from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Animated, Image} from "react-native";
 import Home from "./home";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { AntDesign } from "@expo/vector-icons";
 import { MaterialIcons } from '@expo/vector-icons';
 import React, {useState, useRef, useEffect} from "react";
 import ChooseModal from "./chooseModal";
+import History from "./history";
+import { SimpleLineIcons } from '@expo/vector-icons';
+import { Fontisto } from '@expo/vector-icons';
+import hisUnfilled from '../assets/historyUn.png';
+import hisFilled from '../assets/histFilled.png';
 
 const Tab = createBottomTabNavigator();
 
 const Scan = (props) => {
-  const [showChoose, setShowChoose] = useState(false);
 
   const styles = StyleSheet.create({
     wrapper: {
@@ -33,59 +37,66 @@ const Scan = (props) => {
     }
   });
   return (
-    <TouchableOpacity onPress={() => {setShowChoose(prev => !prev)}}>
+    <TouchableOpacity onPress={() => {props.setShowChoose(prev => !prev)}}>
       <View style={styles.wrapper}>
-        <ChooseModal modalVisible={showChoose} setModalVisible={setShowChoose}/>
+        <ChooseModal modalVisible={props.showChoose} setModalVisible={props.setShowChoose} navigation={props.navigation}/>
         <Text style={{ fontSize: "30", color: "#F9FAFD" }}>+</Text>
       </View>
     </TouchableOpacity>
   );
 };
-const Tabs = () => {
+const Tabs = ({navigation}) => {
+  const [showChoose, setShowChoose] = useState(false);
+
   return (
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarStyle: {
-          position: "absolute",
-          backgroundColor: "#F9FAFD",
-          elevation: 0,
-          right: 20,
-          left: 20,
-          height: 80,
-          bottom: 20,
-          borderRadius: 30,
-          justifyContent: "center",
-          alignItems: "center",
-        },
+        // tabBarStyle: {
+        //   position: "absolute",
+        //   backgroundColor: "white",
+        //   elevation: 0,
+        //   right: 20,
+        //   left: 20,
+        //   height: 80,
+        //   bottom: 20,
+        //   borderRadius: 25,
+        //   justifyContent: "center",
+        //   alignItems: "center",
+        // },
         showLabel: "false",
+        tabBarActiveTintColor: '#674FF6',
       }}
     >
       <Tab.Screen
         options={{
           tabBarShowLabel: true,
-          tabBarIcon: () => <AntDesign name="home" size={25} color="black" />,
+          tabBarIcon: ({focused}) => {return focused ? <Fontisto name="home" size={24} color="black" /> :<SimpleLineIcons name="home" size={24} color="black" />},
         }}
         name="Home"
-        component={Home}
+        children={() => <Home  showChoose={showChoose} navigation={navigation}/>}
       />
       <Tab.Screen
         name="Post"
-        component={Home}
+        children={() => <Home  showChoose={showChoose} navigation={navigation}/>}
         options={{
-          tabBarButton: (props) => <Scan/>,
+          tabBarButton: (props) => <Scan setShowChoose={setShowChoose} showChoose={showChoose} navigation={navigation}/>,
           tabBarShowLabel: false,
         }}
       />
       <Tab.Screen
         options={{
           tabBarShowLabel: true,
-          tabBarIcon: () => (
-            <MaterialIcons name="history" size={25} color="black" />
-          ),
+          tabBarIcon: ({focused}) => {
+            return (
+              focused ?
+              <Image source={hisFilled} style={{width: 35, height: 35}}/>  :
+            <Image source={hisUnfilled} style={{width: 40, height: 40}}/> 
+            );
+          },
         }}
         name="History"
-        component={Home}
+        component={History}
       />
     </Tab.Navigator>
   );

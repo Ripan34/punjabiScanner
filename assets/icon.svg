@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 328 328">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+      }
+
+      .cls-2 {
+        fill: #6ac6a5;
+      }
+
+      .cls-3 {
+        fill: #f2f2f2;
+        filter: url(#drop-shadow-1);
+        font-family: ArialUnicodeMS, 'Arial Unicode MS';
+        font-size: 179.1px;
+      }
+    </style>
+    <filter id="drop-shadow-1" filterUnits="userSpaceOnUse">
+      <feOffset dx="3" dy="1"/>
+      <feGaussianBlur result="blur" stdDeviation="2"/>
+      <feFlood flood-color="#000" flood-opacity=".6"/>
+      <feComposite in2="blur" operator="in"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="Layer_1-2" data-name="Layer 1">
+    <g>
+      <rect class="cls-2" width="328" height="328" rx="16.45" ry="16.45"/>
+      <text class="cls-3" transform="translate(106.78 238.34)"><tspan x="0" y="0">ਓ</tspan></text>
+      <path class="cls-1" d="M66,66h35v-7H62.56c-1.97,0-3.56,1.59-3.56,3.56v37.44h7v-34Z"/>
+      <path class="cls-1" d="M66,263v-35s-7,0-7,0v38.44c0,1.97,1.59,3.56,3.56,3.56h37.44s0-7,0-7h-34Z"/>
+      <path class="cls-1" d="M261,66h-34v-7h37.44c1.97,0,3.56,1.59,3.56,3.56v37.44h-7v-34Z"/>
+      <path class="cls-1" d="M260,262v-34h7v37.44c0,1.97-1.59,3.56-3.56,3.56h-37.44v-7h34Z"/>
+    </g>
+  </g>
+</svg>

@@ -14,7 +14,7 @@ const CameraPreview = ({photo, retakePicture, closeCam}) => {
           backgroundColor: 'transparent',
           flex: 1,
           width: '100%',
-          height: '100%'
+          height: '80%'
         }}
       >
         <View style={styles.choose}>

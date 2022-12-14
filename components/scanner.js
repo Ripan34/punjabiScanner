@@ -1,22 +1,10 @@
-import axios from "axios";
+import { readText } from "../service/firebase";
 
-const config = {
-headers:{
-key: 'alGcuJdBOM77YsTdfu4ZKHyQBnmnWXT97BK4sO5KyyF4S0skm8GHo2dnRZpe_sLHr54'
-}
-};
-const url = "https://api.onlineocrconverter.com/api/image";
-
-async function f(img){
-    const base64 = img.base64;
+async function f(imgC){
+    const img = imgC.base64;
 try{
-    const data ={
-        "base64": base64,
-        "language": "pan"
-        }
-const res = await axios.post(url, data, config);
-
-console.log(res.data)
+    const result  = await readText(img);
+    return result;
 } catch(err){
     console.log(err)
 }
