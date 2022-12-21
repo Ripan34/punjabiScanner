@@ -11,7 +11,7 @@ import {
         return <Text>Loading</Text>;
       } 
     return (
-    <Text style={{...props.style, fontFamily: 'monst'}}>
+    <Text style={{...props.style, fontFamily: 'System'}}>
         {props.val}
     </Text>)
   }

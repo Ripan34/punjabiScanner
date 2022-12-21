@@ -4,7 +4,6 @@ import {
     StyleSheet,
     TouchableOpacity,
     Text,
-    SafeAreaView
   } from "react-native";
 
 const CameraPreview = ({photo, retakePicture, closeCam}) => {

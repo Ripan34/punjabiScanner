@@ -6,11 +6,7 @@ import {
   ScrollView,
   SafeAreaView,
   TouchableOpacity,
-  Image,
   Modal,
-  Animated,
-  ImageBackground,
-  ActivityIndicator,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";

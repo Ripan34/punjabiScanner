@@ -15,6 +15,11 @@ import Profile from "./components/profile";
 import Home from './components/home';
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
+import Name from "./components/name";
+import SignupPassword from "./components/signUpPassword";
+import ChangePassword from "./components/changePassword";
+import AboutUs from "./components/aboutUs";
+import ForgotPassword from "./components/forgotPassword";
 
 // SplashScreen.preventAutoHideAsync();
 
@@ -27,16 +32,23 @@ function cacheImages(images) {
     }
   });
 }
-Notifications.scheduleNotificationAsync({
-  content: {
-    title: "Checkout the word of the day",
-    body: 'tap to learn!',
-  },
-  trigger: {
-    hour: 9,
-    repeats: true
-  },
-});
+// Notifications.setNotificationHandler({
+//   handleNotification: async () => ({
+//     shouldShowAlert: true,
+//     shouldPlaySound: true,
+//     shouldSetBadge: true,
+//   }),
+// });
+// Notifications.scheduleNotificationAsync({
+//   content: {
+//     title: "Checkout word of the day",
+//     body: 'tap to learn!',
+//   },
+//   trigger: {
+//     hour: 9,
+//     repeats: true
+//   },
+// });
 
 const Stack = createNativeStackNavigator();
 
@@ -45,26 +57,29 @@ export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
 
   // useEffect(() => {
-  //   async function prepare() {
-  //     try {
-  //       // Pre-load fonts, make any API calls you need to do here
-  //         const imageAssets = cacheImages([
-  //           require('./assets/b.jpg'),
-  //           require('./assets/nBack.jpeg'),
-  //         ]);
-  //         await Promise.all([...imageAssets]);
+  //   registerForPushNotificationsAsync()
+  // }, [])
+  useEffect(() => {
+    async function prepare() {
+      try {
+        // Pre-load fonts, make any API calls you need to do here
+          // const imageAssets = cacheImages([
+          //   require('./assets/b.jpg'),
+          //   require('./assets/nBack.jpeg'),
+          // ]);
+          // await Promise.all([...imageAssets]);
 
-  //     } catch (e) {
-  //         console.warn(e);
-  //     } finally {
-  //       // Tell the application to render
-  //       setAppIsReady(true);
-  //       await SplashScreen.hideAsync();
-  //     }
-  //   }
+      } catch (e) {
+          console.warn(e);
+      } finally {
+        // Tell the application to render
+        setAppIsReady(true);
+        await SplashScreen.hideAsync();
+      }
+    }
 
-  //   prepare();
-  // }, []);
+    prepare();
+  }, []);
 
 
   // if (!appIsReady) {
@@ -91,6 +106,12 @@ export default function App() {
         <Stack.Screen name="history" component={History} />
         <Stack.Screen name="historyPreview" component={HistoryView} />
         <Stack.Screen name="profile" component={Profile} />
+        <Stack.Screen name="name" component={Name} />
+        <Stack.Screen name="signUpPassword" component={SignupPassword} />
+        <Stack.Screen name="changePassword" component={ChangePassword} />
+        <Stack.Screen name="aboutUs" component={AboutUs} />
+        <Stack.Screen name="forgotPassword" component={ForgotPassword} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -106,34 +127,34 @@ export default function App() {
 //   });
 // }
 
-// async function registerForPushNotificationsAsync() {
-//   let token;
+async function registerForPushNotificationsAsync() {
+  let token;
 
-//   if (Platform.OS === 'android') {
-//     await Notifications.setNotificationChannelAsync('default', {
-//       name: 'default',
-//       importance: Notifications.AndroidImportance.MAX,
-//       vibrationPattern: [0, 250, 250, 250],
-//       lightColor: '#FF231F7C',
-//     });
-//   }
+  if (Platform.OS === 'android') {
+    await Notifications.setNotificationChannelAsync('default', {
+      name: 'default',
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: '#FF231F7C',
+    });
+  }
 
-//   if (Device.isDevice) {
-//     const { status: existingStatus } = await Notifications.getPermissionsAsync();
-//     let finalStatus = existingStatus;
-//     if (existingStatus !== 'granted') {
-//       const { status } = await Notifications.requestPermissionsAsync();
-//       finalStatus = status;
-//     }
-//     if (finalStatus !== 'granted') {
-//       alert('Failed to get push token for push notification!');
-//       return;
-//     }
-//     token = (await Notifications.getExpoPushTokenAsync()).data;
-//     console.log(token);
-//   } else {
-//     alert('Must use physical device for Push Notifications');
-//   }
+  if (Device.isDevice) {
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== 'granted') {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+      alert('Failed to get push token for push notification!');
+      return;
+    }
+    token = (await Notifications.getExpoPushTokenAsync()).data;
+    console.log(token);
+  } else {
+    alert('Must use physical device for Push Notifications');
+  }
 
-//   return token;
-// }
+  return token;
+}

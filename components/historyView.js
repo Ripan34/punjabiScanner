@@ -4,11 +4,10 @@ import {
   View,
   SafeAreaView,
   TouchableOpacity,
-  ScrollView,
   TextInput,
-  Share
+  Share,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import * as Clipboard from 'expo-clipboard';
 import { Feather } from '@expo/vector-icons';
@@ -41,7 +40,7 @@ const HistoryView = ({ route, navigation }) => {
   };
 
   return (
-    <SafeAreaView style={{backgroundColor: 'white', height: '100%'}}>
+    <SafeAreaView style={{           backgroundColor: '#FFEEEB'    , height: '100%'}}>
       <View style={styles.header}>
         <Text style={{ fontSize: 20 }}>Preview</Text>
         <TouchableOpacity
@@ -51,7 +50,7 @@ const HistoryView = ({ route, navigation }) => {
           <Ionicons name="chevron-back" size={24} color="black" />
         </TouchableOpacity>
       </View>
-      <View style={{backgroundColor: '#f5f5f5', height: '100%', padding: 15}}>
+      <View style={{ height: '100%', padding: 15}}>
       <TextInput
         style={styles.textInput}
         value={text}
@@ -87,8 +86,10 @@ const styles = StyleSheet.create({
   header: {
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "white",
     marginBottom: 10,
+    borderBottomColor: '#F5694D',
+    borderBottomWidth: 0.5,
+    paddingBottom: 10
   },
   export: {
     marginTop: 30,

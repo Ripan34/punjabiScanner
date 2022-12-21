@@ -1,9 +1,7 @@
-import { StyleSheet, Text, View, TouchableOpacity, Animated, Image} from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Image} from "react-native";
 import Home from "./home";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { AntDesign } from "@expo/vector-icons";
-import { MaterialIcons } from '@expo/vector-icons';
-import React, {useState, useRef, useEffect} from "react";
+import React, {useState} from "react";
 import ChooseModal from "./chooseModal";
 import History from "./history";
 import { SimpleLineIcons } from '@expo/vector-icons';
@@ -45,24 +43,18 @@ const Scan = (props) => {
     </TouchableOpacity>
   );
 };
-const Tabs = ({navigation}) => {
+const Tabs = ({route, navigation}) => {
   const [showChoose, setShowChoose] = useState(false);
+  const {word, meaning, initials} = route.params;
 
   return (
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
         // tabBarStyle: {
-        //   position: "absolute",
-        //   backgroundColor: "white",
-        //   elevation: 0,
-        //   right: 20,
-        //   left: 20,
-        //   height: 80,
-        //   bottom: 20,
-        //   borderRadius: 25,
-        //   justifyContent: "center",
-        //   alignItems: "center",
+        //   backgroundColor: 'rgba(220, 156, 253, 0.3)',
+        //   borderTopColor: 'black',
+        //   borderTopWidth: 1
         // },
         showLabel: "false",
         tabBarActiveTintColor: '#674FF6',
@@ -74,11 +66,11 @@ const Tabs = ({navigation}) => {
           tabBarIcon: ({focused}) => {return focused ? <Fontisto name="home" size={24} color="black" /> :<SimpleLineIcons name="home" size={24} color="black" />},
         }}
         name="Home"
-        children={() => <Home  showChoose={showChoose} navigation={navigation}/>}
+        children={() => <Home  showChoose={showChoose} navigation={navigation} word={word} initials={initials} meaning={meaning}/>}
       />
       <Tab.Screen
         name="Post"
-        children={() => <Home  showChoose={showChoose} navigation={navigation}/>}
+        children={() => <Home  showChoose={showChoose} navigation={navigation} word={word} initials={initials} meaning={meaning}/>}
         options={{
           tabBarButton: (props) => <Scan setShowChoose={setShowChoose} showChoose={showChoose} navigation={navigation}/>,
           tabBarShowLabel: false,
@@ -96,7 +88,7 @@ const Tabs = ({navigation}) => {
           },
         }}
         name="History"
-        component={History}
+      component={History}
       />
     </Tab.Navigator>
   );

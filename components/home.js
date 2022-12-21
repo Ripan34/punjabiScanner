@@ -7,33 +7,15 @@ import {
   Animated,
   ActivityIndicator
 } from "react-native";
-import { Camera, CameraType } from "expo-camera";
 import { useState, useRef, useEffect } from "react";
 import LottieView from "lottie-react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { getWord } from "../service/firebase";
+import { AntDesign } from '@expo/vector-icons';
 
 const Home = (props) => {
   const op = useRef(new Animated.Value(0)).current;
-  const [word, setWord] = useState("");
-  const [meaning, setMeaning] = useState("");
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    async function getData() {
-      try {
-        setLoading(true);
-        const wordOfD = await getWord();
-        setWord(wordOfD["word"]);
-        setMeaning(wordOfD["meaning"]);
-      } catch (err) {
-        console.log(err);
-      } finally{
-        setLoading(false);
-      }
-    }
-    getData();
-  }, []);
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     Animated.timing(op, {
       toValue: props.showChoose ? 1 : 0,
@@ -47,11 +29,13 @@ const Home = (props) => {
       <View style={styles.welcomeBox}>
         <TouchableOpacity
           style={styles.profile}
-          onPress={() => props.navigation.navigate("profile")}
+          onPress={() => props.navigation.navigate("profile", {name: props.initials})}
         >
-          <Text style={{ color: "white" }}>RS</Text>
+          <Text style={{ color: "white" }}>{props.initials[0]}</Text>
         </TouchableOpacity>
-        <Ionicons name="notifications-circle-outline" size={30} color="black" />
+        <TouchableOpacity onPress={() => props.navigation.navigate("aboutUs")}>
+        <AntDesign name="questioncircle" size={25} color="black" />
+        </TouchableOpacity>
       </View>
       { loading ?     <View style={{justifyContent: 'center', alignItems: 'center', height: '100%'}}>
         <ActivityIndicator size="large" />
@@ -60,8 +44,8 @@ const Home = (props) => {
         <View style={{width: '100%', height: '100%', alignItems: 'center'}}>
           <View style={styles.wordBox}>
             <Text style={styles.title}>Word of the day</Text>
-            <Text style={styles.punText}>{word}</Text>
-            <Text style={styles.desc}>{meaning}</Text>
+            <Text style={styles.punText}>{props.word}</Text>
+            <Text style={styles.desc}>{props.meaning}</Text>
           </View>
           <View style={styles.contentBox}>
             <LottieView
@@ -76,9 +60,6 @@ const Home = (props) => {
           </View>
         </View>
       }
-      {/* <BlurView intensity={9} tint='dark'  style={styles.blur}>
-
-      </BlurView> */}
       <Animated.View
         style={{
           ...styles.blur,
@@ -102,6 +83,8 @@ const styles = StyleSheet.create({
   },
   wrapper: {
     alignItems: "center",
+    backgroundColor: '#FFEEEB'
+
   },
   wordBox: {
     marginTop: 30,

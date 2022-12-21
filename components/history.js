@@ -21,7 +21,7 @@ const History = ({navigation}) => {
     getD();
   }, [isFocused])
     return (
-        <SafeAreaView>
+        <SafeAreaView style={{     backgroundColor: '#FFEEEB'    }}>
             <View style={{width: '100%', flexDirection: 'row', justifyContent: 'space-between', padding: 15, alignItems: 'center'}}>
             <Text style={{fontSize: 30}}>History</Text>
             <TouchableOpacity onPress={handleClear}>
@@ -34,7 +34,7 @@ const History = ({navigation}) => {
                         return (
                             <TouchableOpacity style={styles.card} key={ind} onPress={() => navigation.navigate("historyPreview", {text: obj.value})}>
                             <Text style={styles.hisText}>{obj.value.replace(/[\r\n]/gm, '')}</Text>
-                            <Text style={styles.date}>{`${new Date(obj.date).toLocaleString('default', { month: 'long' })} ${new Date(obj.date).getDay()}`}</Text>
+                            <Text style={styles.date}>{`${new Date(obj.date).toLocaleString('default', { month: 'long' })} ${new Date(obj.date).getDate()}`}</Text>
                         </TouchableOpacity>
                         )
                     })

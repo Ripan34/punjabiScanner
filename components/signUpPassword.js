@@ -8,66 +8,42 @@ import {
     ImageBackground,
     ActivityIndicator
   } from "react-native";
-  import React, { useState, useEffect } from "react";
+  import React, { useState } from "react";
 import MontserratText from "./montserratText";
-import {logInWithEmailAndPassword, auth, getWord} from '../service/firebase';
+import {createWithEmailAndPassword} from '../service/firebase';
 import { MaterialIcons } from "@expo/vector-icons";
 
-  //supreme being??
-  const PasswordScreen = ({route, navigation}) => {
-    const {email} = route.params;
+  const SignupPassword = ({route, navigation}) => {
+    const {email, name} = route.params;
     const [focus, setFocus] = useState(false);
     const [password, setPassword] = useState("");
     const [error, setError] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [word, setWord] = useState(null);
-    const [meaning, setMeaning] = useState(null);
-    const [initials, setInitials] = useState(null);
-
-    async function getData() {
-        try {
-          const wordOfD = await getWord();
-          setWord(wordOfD["word"]);
-          setMeaning(wordOfD["meaning"]);
-          const name = await auth.currentUser.displayName;
-          setInitials(name);
-        } catch (err) {
-            
-        }
-      }
 
     const handleSubmit = async () => {
         try{
             setError(false);
             setLoading(true);
-            await logInWithEmailAndPassword(email, password);
-            await getData();
+            await createWithEmailAndPassword(email, password, name);
+            navigation.navigate('tabs');
         } catch(err){
+            console.log(err);
             setError(true);
         } finally{
             setLoading(false);
         }
     }
-
-    useEffect(() => {
-        if(word != null && meaning != null && initials != null){
-            navigation.navigate("tabs", {word: word, meaning: meaning, initials: initials});
-        } else return;
-      }, [word,meaning, initials])
-
         return (
             <SafeAreaView style={styles.wrapper}>
-            <MontserratText style={styles.title} val={"Login"} />
+            <MontserratText style={styles.title} val={"Sign up"} />
                 <View style={styles.container}>
-                    <Text style={{fontSize: 22, marginBottom: 8}}>{email}</Text>
-                    <TextInput style={{...styles.input, borderColor: focus? '#3461FD': 'black'}} placeholder="password" 
+                    <Text style={{fontSize: 22, marginBottom: 8}}>Password</Text>
+                    <TextInput style={{...styles.input, borderColor: focus? '#3461FD': 'black', marginBottom: 4}} placeholder="password" 
                      onFocus={() => setFocus(true)} onBlur={() => setFocus(false)} secureTextEntry={true} onChangeText={setPassword}/>
-                     <TouchableOpacity onPress={() => navigation.navigate('forgotPassword')}>
-                        <Text style={{marginBottom: 10}}>Forgot password?</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={handleSubmit} style={styles.next}><Text style={{color: 'white'}}>
-                    {loading ? <ActivityIndicator size="small" /> : "Submit"}
-                    </Text></TouchableOpacity>
+                             <Text style={{ marginBottom: 10, fontWeight: "200", fontSize: 12 }}>
+          Must be atleast 6 characters
+        </Text>
+                    <TouchableOpacity onPress={handleSubmit} style={styles.next}><Text style={{color: 'white'}}>  {loading ? <ActivityIndicator size="small" /> : "Create account"}</Text></TouchableOpacity>
                     {error &&             <View style={{ flexDirection: "row", alignContent: "center", marginTop: 10 }}>
               <MaterialIcons
                 name="error-outline"
@@ -76,7 +52,8 @@ import { MaterialIcons } from "@expo/vector-icons";
                 style={{ marginRight: 5 }}
               />
               <Text style={{ color: "red", marginBottom: 10 }}>
-                Wrong email or password
+              Invalid input! please try again
+
               </Text>
             </View>}
                 </View>
@@ -88,7 +65,6 @@ import { MaterialIcons } from "@expo/vector-icons";
         height: '100%',
         width: '100%',
         backgroundColor: '#FFEEEB'
-
     },
     title: {
         marginTop: 20,
@@ -115,4 +91,4 @@ import { MaterialIcons } from "@expo/vector-icons";
         backgroundColor: '#3461FD',
     }
   })
-  export default PasswordScreen;
+  export default SignupPassword;

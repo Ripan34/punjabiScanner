@@ -18,13 +18,17 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.learnPunjabi"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -36,6 +40,11 @@
           "photosPermission": "The app accesses your photos to scan punjabi text."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "dd725cf8-22e7-492a-a05c-d697bfe9d519"
+      }
+    }
   }
 }

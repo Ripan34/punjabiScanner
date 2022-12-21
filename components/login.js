@@ -5,13 +5,10 @@ import {
   SafeAreaView,
   TextInput,
   TouchableOpacity,
-  ImageBackground,
 } from "react-native";
 
 import React, { useState, useEffect } from "react";
-import Checkbox from "expo-checkbox";
 import MontserratText from "./montserratText";
-import b from "../assets/nBack.jpeg";
 import { MaterialIcons } from "@expo/vector-icons";
 
 const Login = ({ navigation }) => {
@@ -32,7 +29,6 @@ const Login = ({ navigation }) => {
     return true;
   };
   return (
-    <ImageBackground resizeMode="cover" source={require("../assets/nBack.jpeg")} style={styles.wrapper}>
       <SafeAreaView style={styles.wrapper}>
         <MontserratText style={styles.title} val={"Login"} />
         <View style={styles.container}>
@@ -61,14 +57,14 @@ const Login = ({ navigation }) => {
               </Text>
             </View>
           )}
-          <View style={{ flexDirection: "row" }}>
+          {/* <View style={{ flexDirection: "row" }}>
             <Checkbox
               style={styles.checkbox}
               value={isChecked}
               onValueChange={setChecked}
             />
             <Text>Remeber my email</Text>
-          </View>
+          </View> */}
           <TouchableOpacity
             style={styles.next}
             onPress={() => {
@@ -79,13 +75,14 @@ const Login = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </SafeAreaView>
-    </ImageBackground>
   );
 };
 const styles = StyleSheet.create({
   wrapper: {
     height: "100%",
     width: "100%",
+    backgroundColor: '#FFEEEB'
+
   },
   title: {
     marginTop: 20,
@@ -101,7 +98,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     fontSize: 15,
-    backgroundColor: "white",
     marginBottom: 10,
   },
   next: {

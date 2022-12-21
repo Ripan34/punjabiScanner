@@ -3,14 +3,9 @@ import {
     Text,
     TextInput,
     View,
-    ScrollView,
     SafeAreaView,
     TouchableOpacity,
     Image,
-    Modal,
-    Animated,
-    ImageBackground,
-    ActivityIndicator,
     Share
   } from "react-native";
   import { Ionicons } from '@expo/vector-icons';
@@ -131,8 +126,8 @@ import {storeData, getData} from './storage';
     header: {
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: 'white',
-      marginBottom: 10
+      marginBottom: 10,
+      borderBottomColor: '#F5694D',
     },
     export: {
       marginTop: 30,
