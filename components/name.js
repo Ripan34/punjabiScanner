@@ -10,6 +10,7 @@ import {
   import React, { useState } from "react";
 import MontserratText from "./montserratText";
 import { MaterialIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 
 const Name = ({route, navigation}) => {
     const {email} = route.params;
@@ -29,16 +30,24 @@ const Name = ({route, navigation}) => {
     }
     return (
           <SafeAreaView style={styles.wrapper}>
-            <MontserratText style={styles.title} val={"Sign up"} />
+             <View style={styles.gBack}>
+        <TouchableOpacity
+        style={styles.bck}
+            onPress={() => navigation.goBack()}
+          >
+            <Ionicons name="chevron-back" size={24} color="black" />
+          </TouchableOpacity>
+        <MontserratText style={styles.title} val={"Sign up"} />
+        </View>
             <View style={styles.container}>
-              <Text style={{ fontSize: 22, marginBottom: 8 }}>First Name</Text>
+            <MontserratText style={{ fontSize: 22, marginBottom: 8 }} val={"First Name"} />
               <TextInput
                 onChangeText={setName}
                 style={{
                   ...styles.input,
                   borderColor: focus ? "#3461FD" : "black",
                 }}
-                placeholder="name"
+                placeholder="First name"
                 onFocus={() => setFocus(true)}
                 onBlur={() => setFocus(false)}
               />
@@ -59,7 +68,7 @@ const Name = ({route, navigation}) => {
                 style={styles.next}
                 onPress={handleSubmit}
               >
-                <Text style={{ color: "white" }}>Next</Text>
+                <MontserratText style={{ color: "white" }} val={"Next"} />
               </TouchableOpacity>
             </View>
           </SafeAreaView>
@@ -69,12 +78,21 @@ const Name = ({route, navigation}) => {
       wrapper: {
         height: "100%",
         width: "100%",
-        backgroundColor: '#FFEEEB'
+        backgroundColor: '#F6F5FC'
       },
       title: {
-        marginTop: 20,
-        marginLeft: 18,
         fontSize: 30,
+      },
+      gBack: {
+        marginTop: 20,
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: '100%',
+        justifyContent: 'center'
+      },
+      bck: {
+        position: 'absolute',
+        left: 18
       },
       container: {
         padding: 18,

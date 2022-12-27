@@ -19,7 +19,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.learnPunjabi"
+      "bundleIdentifier": "com.punjabiwod"
     },
     "android": {
       "adaptiveIcon": {
@@ -35,11 +35,17 @@
     },
     "plugins": [
       [
-        "expo-image-picker",
+        "react-native-fbsdk-next",
         {
-          "photosPermission": "The app accesses your photos to scan punjabi text."
+          "appID": "830029054775839",
+          "clientToken": "5aa4f73919214a0a29ba316c136f600b",
+          "displayName": "Word of the day punjabi"
         }
-      ]
+      ],
+      [        "expo-image-picker",
+      {
+        "photosPermission": "The app accesses your photos to scan punjabi text."
+      }]
     ],
     "extra": {
       "eas": {

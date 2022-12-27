@@ -12,6 +12,7 @@ import {
 import MontserratText from "./montserratText";
 import {logInWithEmailAndPassword, auth, getWord} from '../service/firebase';
 import { MaterialIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 
   //supreme being??
   const PasswordScreen = ({route, navigation}) => {
@@ -23,7 +24,7 @@ import { MaterialIcons } from "@expo/vector-icons";
     const [word, setWord] = useState(null);
     const [meaning, setMeaning] = useState(null);
     const [initials, setInitials] = useState(null);
-
+ 
     async function getData() {
         try {
           const wordOfD = await getWord();
@@ -51,23 +52,30 @@ import { MaterialIcons } from "@expo/vector-icons";
 
     useEffect(() => {
         if(word != null && meaning != null && initials != null){
-            navigation.navigate("tabs", {word: word, meaning: meaning, initials: initials});
+            navigation.navigate("tabs", {word: word, meaning: meaning, initials: initials, email: email});
         } else return;
       }, [word,meaning, initials])
 
         return (
             <SafeAreaView style={styles.wrapper}>
-            <MontserratText style={styles.title} val={"Login"} />
+           <View style={styles.gBack}>
+        <TouchableOpacity
+        style={styles.bck}
+            onPress={() => navigation.goBack()}
+          >
+            <Ionicons name="chevron-back" size={24} color="black" />
+          </TouchableOpacity>
+        <MontserratText style={styles.title} val={"Login"} />
+        </View>
                 <View style={styles.container}>
-                    <Text style={{fontSize: 22, marginBottom: 8}}>{email}</Text>
+                <MontserratText style={{fontSize: 22, marginBottom: 8}} val={email} />
                     <TextInput style={{...styles.input, borderColor: focus? '#3461FD': 'black'}} placeholder="password" 
                      onFocus={() => setFocus(true)} onBlur={() => setFocus(false)} secureTextEntry={true} onChangeText={setPassword}/>
                      <TouchableOpacity onPress={() => navigation.navigate('forgotPassword')}>
                         <Text style={{marginBottom: 10}}>Forgot password?</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={handleSubmit} style={styles.next}><Text style={{color: 'white'}}>
-                    {loading ? <ActivityIndicator size="small" /> : "Submit"}
-                    </Text></TouchableOpacity>
+                    <TouchableOpacity onPress={handleSubmit} style={styles.next}>
+                    <MontserratText style={{ color: "white" }} val= {loading ? <ActivityIndicator size="small" /> : "Submit"} /></TouchableOpacity>
                     {error &&             <View style={{ flexDirection: "row", alignContent: "center", marginTop: 10 }}>
               <MaterialIcons
                 name="error-outline"
@@ -87,14 +95,22 @@ import { MaterialIcons } from "@expo/vector-icons";
     wrapper: {
         height: '100%',
         width: '100%',
-        backgroundColor: '#FFEEEB'
-
-    },
-    title: {
+        backgroundColor: '#F6F5FC'
+      },
+      title: {
+        fontSize: 30,
+      },
+      gBack: {
         marginTop: 20,
-        marginLeft: 18,
-        fontSize: 30
-    },
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: '100%',
+        justifyContent: 'center'
+      },
+      bck: {
+        position: 'absolute',
+        left: 18
+      },
     container: {
         padding: 18
     },

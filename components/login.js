@@ -10,6 +10,7 @@ import {
 import React, { useState, useEffect } from "react";
 import MontserratText from "./montserratText";
 import { MaterialIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 
 const Login = ({ navigation }) => {
   const [focus, setFocus] = useState(false);
@@ -30,9 +31,17 @@ const Login = ({ navigation }) => {
   };
   return (
       <SafeAreaView style={styles.wrapper}>
+        <View style={styles.gBack}>
+        <TouchableOpacity
+        style={styles.bck}
+            onPress={() => navigation.goBack()}
+          >
+            <Ionicons name="chevron-back" size={24} color="black" />
+          </TouchableOpacity>
         <MontserratText style={styles.title} val={"Login"} />
+        </View>
         <View style={styles.container}>
-          <Text style={{ fontSize: 22, marginBottom: 8 }}>Email</Text>
+        <MontserratText style={{ fontSize: 22, marginBottom: 8 }} val={"Email"} />
           <TextInput
             onChangeText={setEmail}
             style={{
@@ -71,7 +80,7 @@ const Login = ({ navigation }) => {
               validateEmail() && navigation.navigate("password", { email });
             }}
           >
-            <Text style={{ color: "white" }}>Next</Text>
+            <MontserratText style={{ color: "white" }} val={"Next"} />
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -81,13 +90,21 @@ const styles = StyleSheet.create({
   wrapper: {
     height: "100%",
     width: "100%",
-    backgroundColor: '#FFEEEB'
-
+    backgroundColor: '#F6F5FC'
   },
   title: {
-    marginTop: 20,
-    marginLeft: 18,
     fontSize: 30,
+  },
+  gBack: {
+    marginTop: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    justifyContent: 'center'
+  },
+  bck: {
+    position: 'absolute',
+    left: 18
   },
   container: {
     padding: 18,

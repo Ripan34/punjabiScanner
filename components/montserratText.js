@@ -5,13 +5,13 @@ import {
 
   const MontserratText = (props) => {
     const [fontsLoaded] = useFonts({
-        'monst': require('../assets/monst.ttf'),
+        'monst': require('../assets/pop.ttf'),
       });
       if (!fontsLoaded) {
         return <Text>Loading</Text>;
       } 
     return (
-    <Text style={{...props.style, fontFamily: 'System'}}>
+    <Text style={{...props.style, fontFamily: 'monst'}}>
         {props.val}
     </Text>)
   }

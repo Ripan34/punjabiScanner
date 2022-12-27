@@ -45,17 +45,17 @@ const Scan = (props) => {
 };
 const Tabs = ({route, navigation}) => {
   const [showChoose, setShowChoose] = useState(false);
-  const {word, meaning, initials} = route.params;
+  const {word, meaning, initials, email} = route.params;
 
   return (
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        // tabBarStyle: {
-        //   backgroundColor: 'rgba(220, 156, 253, 0.3)',
-        //   borderTopColor: 'black',
-        //   borderTopWidth: 1
-        // },
+        tabBarStyle: {
+          backgroundColor: '#F6F5FC',
+          borderTopColor: '#3461FD',
+          borderTopWidth: 0.20
+        },
         showLabel: "false",
         tabBarActiveTintColor: '#674FF6',
       }}
@@ -66,11 +66,11 @@ const Tabs = ({route, navigation}) => {
           tabBarIcon: ({focused}) => {return focused ? <Fontisto name="home" size={24} color="black" /> :<SimpleLineIcons name="home" size={24} color="black" />},
         }}
         name="Home"
-        children={() => <Home  showChoose={showChoose} navigation={navigation} word={word} initials={initials} meaning={meaning}/>}
+        children={() => <Home  showChoose={showChoose} navigation={navigation} word={word} initials={initials} meaning={meaning} email={email}/>}
       />
       <Tab.Screen
         name="Post"
-        children={() => <Home  showChoose={showChoose} navigation={navigation} word={word} initials={initials} meaning={meaning}/>}
+        children={() => <Home  showChoose={showChoose} navigation={navigation} word={word} initials={initials} meaning={meaning} email={email}/>}
         options={{
           tabBarButton: (props) => <Scan setShowChoose={setShowChoose} showChoose={showChoose} navigation={navigation}/>,
           tabBarShowLabel: false,

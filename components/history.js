@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, ScrollView } fr
 import React, {useEffect, useState} from "react";
 import {getData, clear} from './storage';
 import { useIsFocused } from "@react-navigation/native";
+import MontserratText from "./montserratText";
 
 const History = ({navigation}) => {
 
@@ -21,11 +22,11 @@ const History = ({navigation}) => {
     getD();
   }, [isFocused])
     return (
-        <SafeAreaView style={{     backgroundColor: '#FFEEEB'    }}>
+        <SafeAreaView style={{ backgroundColor: '#F6F5FC'}}>
             <View style={{width: '100%', flexDirection: 'row', justifyContent: 'space-between', padding: 15, alignItems: 'center'}}>
-            <Text style={{fontSize: 30}}>History</Text>
+            <MontserratText style={{ fontSize: 30 }} val={"History"} />
             <TouchableOpacity onPress={handleClear}>
-                <Text style={{fontSize: 15}}>Clear</Text>
+            <MontserratText style={{ fontSize: 15 }} val={"clear"} />
             </TouchableOpacity>
             </View>
             <ScrollView style={styles.container} contentContainerStyle={{alignItems: 'center'}}>
@@ -33,8 +34,8 @@ const History = ({navigation}) => {
                     historyArr.map((obj, ind) => {
                         return (
                             <TouchableOpacity style={styles.card} key={ind} onPress={() => navigation.navigate("historyPreview", {text: obj.value})}>
-                            <Text style={styles.hisText}>{obj.value.replace(/[\r\n]/gm, '')}</Text>
-                            <Text style={styles.date}>{`${new Date(obj.date).toLocaleString('default', { month: 'long' })} ${new Date(obj.date).getDate()}`}</Text>
+                                <MontserratText style={styles.hisText} val={obj.value.replace(/[\r\n]/gm, '')} />
+                                <MontserratText style={styles.date} val={`${new Date(obj.date).toLocaleString('default', { month: 'long' })} ${new Date(obj.date).getDate()}`} />
                         </TouchableOpacity>
                         )
                     })

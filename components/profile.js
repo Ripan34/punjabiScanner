@@ -4,13 +4,14 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import {signOutUser} from '../service/firebase';
 import { MaterialIcons } from '@expo/vector-icons';
+import MontserratText from "./montserratText";
 
 const Profile = ({route, navigation}) => {
-  const {name} = route.params;
+  const {name, email} = route.params;
     return (
-        <SafeAreaView style={{    backgroundColor: '#FFEEEB'        , height: '100%'}}>
+        <SafeAreaView style={{ height: '100%', backgroundColor: '#F6F5FC'}}>
         <View style={styles.header}>
-          <Text style={{ fontSize: 20 }}>My Profile</Text>
+        <MontserratText style={{ fontSize: 20 }} val={"My Profile"} />
           <TouchableOpacity
             style={{ position: "absolute", top: -3, left: 0, padding: 5 }}
             onPress={() => navigation.goBack()}
@@ -26,23 +27,23 @@ const Profile = ({route, navigation}) => {
             </View>
             <View style={styles.rows}>
                 <Ionicons name="person-outline" size={35} color="black" />
-                <Text style={{marginLeft: 40, fontSize: 18}}>{name}</Text>
+                <MontserratText style={{marginLeft: 40, fontSize: 18}} val={name} />
             </View>
             <View style={styles.rows}>
             <MaterialCommunityIcons name="email-outline" size={32} color="black" />
-                <Text style={{marginLeft: 40, fontSize: 18}}>sh.2100.ra@gmail.com</Text>
+              <MontserratText style={{marginLeft: 40, fontSize: 18}} val={email} />
             </View>
             <TouchableOpacity style={styles.rows} onPress={async () => {
             navigation.navigate("changePassword");
             }}>
             <AntDesign name="eyeo" size={32} color="black" />
-                <Text style={{marginLeft: 40, fontSize: 18}}>Change Password</Text>
+            <MontserratText style={{marginLeft: 40, fontSize: 18}} val={"Change Password"} />
             </TouchableOpacity>
             <TouchableOpacity style={styles.rows} onPress={async () => {await signOutUser();
             navigation.navigate("welcome");
             }}>
             <MaterialIcons name="logout" size={30} color="black" />
-                <Text style={{marginLeft: 40, fontSize: 18}}>Logout</Text>
+            <MontserratText style={{marginLeft: 40, fontSize: 18}} val={"Logout"} />
             </TouchableOpacity>
         </View>
         </SafeAreaView>
@@ -53,7 +54,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         marginBottom: 10,
-        borderBottomColor: '#F5694D',
+        borderBottomColor: '#3461FD',
         borderBottomWidth: 0.5,
         paddingBottom: 10
       },

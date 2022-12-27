@@ -10,11 +10,21 @@ import {
 import { useState, useRef, useEffect } from "react";
 import LottieView from "lottie-react-native";
 import { AntDesign } from '@expo/vector-icons';
+import MontserratText from "./montserratText";
+import { Feather } from '@expo/vector-icons';
+import * as Clipboard from 'expo-clipboard';
 
 const Home = (props) => {
   const op = useRef(new Animated.Value(0)).current;
 
   const [loading, setLoading] = useState(false);
+  const [copiedText, setCopiedText] = useState(false);
+
+  const copyToClipboard = async () => {
+    setCopiedText(false);
+    await Clipboard.setStringAsync(props.word + '\n' + props.meaning);
+    setCopiedText(true);
+  };
 
   useEffect(() => {
     Animated.timing(op, {
@@ -29,7 +39,7 @@ const Home = (props) => {
       <View style={styles.welcomeBox}>
         <TouchableOpacity
           style={styles.profile}
-          onPress={() => props.navigation.navigate("profile", {name: props.initials})}
+          onPress={() => props.navigation.navigate("profile", {name: props.initials, email: props.email})}
         >
           <Text style={{ color: "white" }}>{props.initials[0]}</Text>
         </TouchableOpacity>
@@ -43,11 +53,16 @@ const Home = (props) => {
 :
         <View style={{width: '100%', height: '100%', alignItems: 'center'}}>
           <View style={styles.wordBox}>
-            <Text style={styles.title}>Word of the day</Text>
-            <Text style={styles.punText}>{props.word}</Text>
-            <Text style={styles.desc}>{props.meaning}</Text>
+          <MontserratText style={styles.title} val={"Word of the day"} />
+          <MontserratText style={styles.punText} val={props.word} />
+          <MontserratText style={styles.desc} val={props.meaning} />
+          <TouchableOpacity onPress={copyToClipboard} style={styles.copy}>
+          <AntDesign name="copy1" size={20} color="black"/>
+          <Text style={{fontSize: 15}}>{copiedText ? "copied!" : "copy"}</Text>
+          </TouchableOpacity>
           </View>
           <View style={styles.contentBox}>
+            <MontserratText style={{fontSize: 22, marginTop: 20}} val={"Extract punjabi text from images"} />
             <LottieView
               autoPlay
               style={{
@@ -56,7 +71,22 @@ const Home = (props) => {
               }}
               source={require("../assets/scanLot.json")}
             />
-            <Text>Start scanning text</Text>
+           <View style={{flexDirection: 'row', width: '90%', justifyContent: 'space-around', marginTop: 30, opacity: 0.5}}>
+            <View style={{justifyContent: 'center', alignItems: 'center'}}>
+              <AntDesign name="printer" size={35} color="black" />
+              <MontserratText style={{fontSize: 15, opacity: 0.5}} val={"Print"} />
+            </View>
+            <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            <Feather name="share" size={35} color="black" />
+            <MontserratText style={{fontSize: 15, opacity: 0.5}} val={"Share"} />
+            </View>
+            <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            <AntDesign name="copy1" size={35} color="black" />
+            <MontserratText style={{fontSize: 15, opacity: 0.5}} val={"Copy"} />
+            </View>
+
+           </View>
+
           </View>
         </View>
       }
@@ -83,8 +113,7 @@ const styles = StyleSheet.create({
   },
   wrapper: {
     alignItems: "center",
-    backgroundColor: '#FFEEEB'
-
+    backgroundColor: '#F6F5FC'
   },
   wordBox: {
     marginTop: 30,
@@ -93,11 +122,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFEFF",
     borderRadius: 15,
     padding: 10,
-    shadowColor: "#171717",
-    shadowOffset: { width: -2, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-    elevation: 20,
+    // shadowColor: "#171717",
+    // shadowOffset: { width: -2, height: 4 },
+    // shadowOpacity: 0.2,
+    // shadowRadius: 3,
+    // elevation: 20,
+    borderWidth: 0.4,
+    borderColor: '#3461FD'
   },
   title: {
     fontSize: 30,
@@ -116,13 +147,16 @@ const styles = StyleSheet.create({
     height: "50%",
     backgroundColor: "#FFFEFF",
     borderRadius: 15,
-    padding: 5,
+    padding: 8,
     alignItems: "center",
-    shadowColor: "#171717",
-    shadowOffset: { width: -2, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-    elevation: 20,
+    // shadowColor: "#171717",
+    // shadowOffset: { width: -2, height: 4 },
+    // shadowOpacity: 0.2,
+    // shadowRadius: 3,
+    // elevation: 20,
+    alignItems: 'center',
+    borderWidth: 0.4,
+    borderColor: '#3461FD'
   },
   blur: {
     position: "absolute",
@@ -139,5 +173,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#F5694D",
   },
+  copy: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 20,
+  }
 });
 export default Home;

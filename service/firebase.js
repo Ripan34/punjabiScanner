@@ -8,7 +8,9 @@ import {
   updatePassword,
   reauthenticateWithCredential,
   createUserWithEmailAndPassword,
-  updateProfile
+  updateProfile,
+  GoogleAuthProvider,
+  signInWithCredential
 } from "firebase/auth";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import {
@@ -33,6 +35,7 @@ const auth = getAuth(app);
 
 const functions = getFunctions(app);
 const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
 
 const readText = async (img) => {
   try {
@@ -44,6 +47,18 @@ const readText = async (img) => {
     throw err;
   }
 };
+
+const readTextFromPdfFire = async (pdf) => {
+  try{
+    const readTextFromPdf = httpsCallable(functions, "readTextFromPdf");
+    const result = await readTextFromPdf({imgContent: pdf});
+    const data = result.data;
+    console.log(result)
+    return data.data;
+  } catch(err){
+      throw err;
+  }
+}
 const logInWithEmailAndPassword = async (email, password) => {
   try {
     await signInWithEmailAndPassword(auth, email, password);
@@ -91,6 +106,32 @@ const changePassword = async (oldPassword, newPassword) => {
     }
   };
 
+  const loginWithGoogle = async (id_token) => {
+    try{
+      const credential = GoogleAuthProvider.credential(id_token);
+      const result = signInWithCredential(auth, credential);
+  // .then((result) => {
+  //   // This gives you a Google Access Token. You can use it to access the Google API.
+  //   const credential = GoogleAuthProvider.credentialFromResult(result);
+  //   const token = credential.accessToken;
+  //   // The signed-in user info.
+  //   const user = result.user;
+  //   // ...
+  // }).catch((error) => {
+  //   // Handle Errors here.
+  //   const errorCode = error.code;
+  //   const errorMessage = error.message;
+  //   // The email of the user's account used.
+  //   const email = error.customData.email;
+  //   // The AuthCredential type that was used.
+  //   const credential = GoogleAuthProvider.credentialFromError(error);
+  //   // ...
+  // });
+
+    } catch(err){
+        throw err;
+    }
+  }
 const getWord = async () => {
   try {
     const counterRef = doc(db, "punjabi_words", "counter");
@@ -118,60 +159,60 @@ const uploadData = async () => {
   try{
     const wordsRef = collection(db, "punjabi_words");
     await setDoc(doc(wordsRef, "26"), {
-      "word": "ਅਛਿੰਦਾ",
-      "meaning": "a Dear darling beloved impertinent"
+      "word": "ਜਿਵਾਉਣਾ jiwáuṉá",
+      "meaning": "To revive to give life to feed to cause to eat"
  });
  await setDoc(doc(wordsRef, "27"), {
-  "word": "ਗੁਲੋਚਣ",
-  "meaning": "The name of a substance sometimes found in the gall bladder of the cow which is used medicinally"
+  "word": "ਹਾਜਣਾ hájṉá",
+  "meaning": "To eat without being satisfied to be always hungry"
 });
 await setDoc(doc(wordsRef, "28"), {
-  "word": "ਹੱਚਨਾ",
-  "meaning": "To be beaten or tired of doing a thing"
+  "word": "ਬੁਲੰਦੀ bulaṇdí",
+  "meaning": "Height"
 });
 await setDoc(doc(wordsRef, "29"), {
-  "word": "ਜਟੱਲੀ",
-  "meaning": "A liar one who talks nonsense"
+  "word": "ਸਨਦੂਕਡ਼ੀ sandúkṛí",
+  "meaning": "A small box or chest"
 });
 await setDoc(doc(wordsRef, "30"), {
-  "word": "ਜਿਆਣ",
-  "meaning": "Loss damage hurt harm injury"
+  "word": "ਸਿਜਲ sijal",
+  "meaning": "a Good refined correct polished"
 });
 await setDoc(doc(wordsRef, "31"), {
-  "word": " ਕੁਰੂਪ kurúp",
-  "meaning": "a Ill-formed ill-shaped ugly"
+  "word": "ਊਧਮ údham",
+  "meaning": "The noise of music dancing and rejoicing disturbance rebellion"
 });
 await setDoc(doc(wordsRef, "32"), {
-  "word": "ਮਡ਼ਕਣਾ maṛkṉá",
-  "meaning": "a Creaking shoes brittle breaking when folded paper"
+  "word": "ਵਹਿਜਤ wahijat",
+  "meaning": "A habit, a practice"
 });
 await setDoc(doc(wordsRef, "33"), {
-  "word": "ਨਛਿੱਕਾ nachhikká",
-  "meaning": "a Ashamed"
+  "word": "ਯਰਾਨਾ yaráná",
+  "meaning": "Friendship affection attachment"
 });
 await setDoc(doc(wordsRef, "34"), {
-  "word": "ਫੁਲਫੁਲਾਟ phulphuláṭ",
-  "meaning": "Pomp show a white spot on the forehead of animals"
+  "word": "ਵਿਟਰਾਉਣਾ wiṭráuṉá",
+  "meaning": "To spoil to damage to enrage to make furious"
 });
 await setDoc(doc(wordsRef, "35"), {
-  "word": "ਪਿਰਤਬਿੰਬ pirtbimb",
-  "meaning": "An image or picture the reflection of an image or figure in a mirror or water"
+  "word": "ਖਰਾਇਤਣ kharáitaṉ",
+  "meaning": "A beggar one who lives on charity"
 });
 await setDoc(doc(wordsRef, "36"), {
-  "word": "ਰਖਵੈਯ਼ਾ rakhwaiyá",
-  "meaning": "One who keeps preserves or takes care of an employer"
+  "word": "ਖੰਭਡ਼ਾ khaṇbhṛá",
+  "meaning": "The fin of a fish"
 });
 await setDoc(doc(wordsRef, "37"), {
-  "word": "ਸਦੱਕਡ਼ੇ sadakkaṛe",
-  "meaning": "To be sacrificed for the welfare of another"
+  "word": "ਮਾਸੇਹੋਰਾ másehorá ",
+  "meaning": "The husband of a mother-in-laws sister"
 });
 await setDoc(doc(wordsRef, "38"), {
-  "word": "ਸਰਹਾਉਂਦੀ sarháuṇdí",
-  "meaning": "The head of a bedstead or of a tomb"
+  "word": "ਪਘਰਾਉਣਾ paghráuṉá",
+  "meaning": "To melt by applying heat to fuse"
 });
 await setDoc(doc(wordsRef, "39"), {
-  "word": "ਤਡ਼ਾਖਾ tarákhá",
-  "meaning": "The sound of breaking wood breaking cracking"
+  "word": "ਫੱਦਡ਼ phaddaṛ",
+  "meaning": "Very fat and ugly worthless destitute of energy"
 });
   } catch(err){
       console.log(err)
@@ -186,3 +227,5 @@ exports.createWithEmailAndPassword = createWithEmailAndPassword;
 exports.auth = auth;
 exports.changePassword = changePassword;
 exports.sendResetPasswordEmail = sendResetPasswordEmail;
+exports.readTextFromPdfFire = readTextFromPdfFire;
+exports.loginWithGoogle = loginWithGoogle;

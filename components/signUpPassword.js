@@ -8,10 +8,11 @@ import {
     ImageBackground,
     ActivityIndicator
   } from "react-native";
-  import React, { useState } from "react";
+  import React, { useState, useEffect } from "react";
 import MontserratText from "./montserratText";
 import {createWithEmailAndPassword} from '../service/firebase';
 import { MaterialIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 
   const SignupPassword = ({route, navigation}) => {
     const {email, name} = route.params;
@@ -19,13 +20,27 @@ import { MaterialIcons } from "@expo/vector-icons";
     const [password, setPassword] = useState("");
     const [error, setError] = useState(false);
     const [loading, setLoading] = useState(false);
-
+    const [word, setWord] = useState(null);
+    const [meaning, setMeaning] = useState(null);
+    const [initials, setInitials] = useState(null);
+ 
+    async function getData() {
+        try {
+          const wordOfD = await getWord();
+          setWord(wordOfD["word"]);
+          setMeaning(wordOfD["meaning"]);
+          const name = await auth.currentUser.displayName;
+          setInitials(name);
+        } catch (err) {
+            
+        }
+      }
     const handleSubmit = async () => {
         try{
             setError(false);
             setLoading(true);
             await createWithEmailAndPassword(email, password, name);
-            navigation.navigate('tabs');
+            await getData();
         } catch(err){
             console.log(err);
             setError(true);
@@ -33,17 +48,33 @@ import { MaterialIcons } from "@expo/vector-icons";
             setLoading(false);
         }
     }
+    useEffect(() => {
+        if(word != null && meaning != null && initials != null){
+            navigation.navigate("tabs", {word: word, meaning: meaning, initials: initials, email: email});
+        } else return;
+      }, [word,meaning, initials])
+
         return (
             <SafeAreaView style={styles.wrapper}>
-            <MontserratText style={styles.title} val={"Sign up"} />
+                       <View style={styles.gBack}>
+        <TouchableOpacity
+        style={styles.bck}
+            onPress={() => navigation.goBack()}
+          >
+            <Ionicons name="chevron-back" size={24} color="black" />
+          </TouchableOpacity>
+        <MontserratText style={styles.title} val={"Sign up"} />
+        </View>
                 <View style={styles.container}>
-                    <Text style={{fontSize: 22, marginBottom: 8}}>Password</Text>
+                <MontserratText style={{fontSize: 22, marginBottom: 8}} val={"Password"} />
                     <TextInput style={{...styles.input, borderColor: focus? '#3461FD': 'black', marginBottom: 4}} placeholder="password" 
                      onFocus={() => setFocus(true)} onBlur={() => setFocus(false)} secureTextEntry={true} onChangeText={setPassword}/>
                              <Text style={{ marginBottom: 10, fontWeight: "200", fontSize: 12 }}>
           Must be atleast 6 characters
         </Text>
-                    <TouchableOpacity onPress={handleSubmit} style={styles.next}><Text style={{color: 'white'}}>  {loading ? <ActivityIndicator size="small" /> : "Create account"}</Text></TouchableOpacity>
+                    <TouchableOpacity onPress={handleSubmit} style={styles.next}>
+                    <MontserratText style={{color: 'white'}} val={loading ? <ActivityIndicator size="small" /> : "Create account"} />
+                    </TouchableOpacity>
                     {error &&             <View style={{ flexDirection: "row", alignContent: "center", marginTop: 10 }}>
               <MaterialIcons
                 name="error-outline"
@@ -64,13 +95,22 @@ import { MaterialIcons } from "@expo/vector-icons";
     wrapper: {
         height: '100%',
         width: '100%',
-        backgroundColor: '#FFEEEB'
+        backgroundColor: '#F6F5FC'
     },
     title: {
+        fontSize: 30,
+      },
+      gBack: {
         marginTop: 20,
-        marginLeft: 18,
-        fontSize: 30
-    },
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: '100%',
+        justifyContent: 'center'
+      },
+      bck: {
+        position: 'absolute',
+        left: 18
+      },
     container: {
         padding: 18
     },

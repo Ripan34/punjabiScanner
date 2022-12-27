@@ -17,8 +17,11 @@ import { Camera, CameraType } from "expo-camera";
 import { Dimensions } from "react-native";
 import CameraPreview from "./cameraPreview";
 import { Ionicons } from "@expo/vector-icons";
-import { readText } from "../service/firebase";
+import { readText, readTextFromPdfFire } from "../service/firebase";
 import ScannedTextView from "./scannedTextView";
+import MontserratText from "./montserratText";
+import * as DocumentPicker from 'expo-document-picker';
+import * as FileSystem from 'expo-file-system';
 
 const ChooseModal = (props) => {
   const [image, setImage] = useState(null);
@@ -27,6 +30,7 @@ const ChooseModal = (props) => {
   const [previewVisible, setPreviewVisible] = useState(false);
   const [capturedImage, setCapturedImage] = useState(null);
   const [punjabi, setPunjabi] = useState(null);
+  const [pdf, setPdf] = useState(null);
 
   useEffect(() => {
     async function getText() {
@@ -40,6 +44,18 @@ const ChooseModal = (props) => {
     }
     if (!startCamera && (capturedImage != null || image != null)) getText();
   }, [startCamera, image]);
+
+  useEffect(() => {
+    async function getTextPdf(){
+      try{
+        const res = await readTextFromPdfFire(pdf);
+        setPunjabi(res);
+      } catch(err){
+          console.log(err);
+      }
+    }
+    if(pdf != null) getTextPdf();
+  }, [pdf])
 
   useEffect(() => {
       if(!props.modalVisible){
@@ -93,6 +109,21 @@ const ChooseModal = (props) => {
     }
   };
 
+  const pickDocument = async () => {
+    try{
+      const result = await DocumentPicker.getDocumentAsync({
+        type: ['application/pdf'],
+        copyToCacheDirectory: true,
+
+      })
+      if(result.type != "cancel"){
+        const re = await FileSystem.readAsStringAsync(result.uri, {encoding: FileSystem.EncodingType.Base64});
+        setPdf(re);
+      }
+    } catch(err){
+
+    }
+  }
   return (
     <Modal
       style={styles.wrapper}
@@ -151,14 +182,15 @@ const ChooseModal = (props) => {
             </SafeAreaView>
           </Camera>
         )
-      ) : capturedImage || image ? (
-          <ScannedTextView image={image} capturedImage={capturedImage} punjabi={punjabi} setModalVisible={props.setModalVisible}/>
+      ) : capturedImage || image || pdf? (
+          <ScannedTextView image={image} capturedImage={capturedImage} punjabi={punjabi} pdf={pdf} setModalVisible={props.setModalVisible}/>
       ) : (
         <SafeAreaView style={styles.wrapper2}>
           <View
             style={styles.crossSection}
           >
-            <Text style={{fontSize: 25, fontWeight: '500'}}>Scan</Text>
+                  <MontserratText style={{fontSize: 25, fontWeight: '500'}} val={"Scan"} />
+
             <TouchableOpacity  onPress={() => props.setModalVisible(false)}>
               <Entypo name="cross" size={30} color="black" />
             </TouchableOpacity>
@@ -172,7 +204,7 @@ const ChooseModal = (props) => {
             <View style={styles.circle}>
             <Feather name="camera" size={24} color="black" />
               </View>
-            <Text style={styles.text}>Take Picture</Text>
+              <MontserratText style={styles.text} val={"Take Picture"} />
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
@@ -183,18 +215,18 @@ const ChooseModal = (props) => {
             <View style={styles.circle}>
             <FontAwesome name="photo" size={24} color="black" />
             </View>
-            <Text style={styles.text}>Choose from Gallery</Text>
+            <MontserratText style={styles.text} val={"Choose from Gallery"} />
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              pickImage();
+              pickDocument();
             }}
             style={styles.container}
           >
             <View style={styles.circle}>
             <Ionicons name="document-outline" size={28} color="black" />
             </View>
-            <Text style={styles.text}>Document upload</Text>
+            <MontserratText style={styles.text} val={"Document upload"} />
           </TouchableOpacity>
         </SafeAreaView>
       )}
@@ -214,7 +246,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "40%",
     alignItems: "flex-start",
-    backgroundColor: "white",
+    backgroundColor: 'white',
     borderRadius: 20,
   },
   text: {

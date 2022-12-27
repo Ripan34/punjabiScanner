@@ -106,14 +106,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 10,
-    borderBottomColor: '#F5694D',
+    borderBottomColor: '#3461FD',
     borderBottomWidth: 0.5,
     paddingBottom: 10
   },
   wrapper: {
     height: "100%",
     width: "100%",
-    backgroundColor: '#FFEEEB'
+    backgroundColor: '#F6F5FC'
   },
   title: {
     marginTop: 20,

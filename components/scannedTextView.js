@@ -15,11 +15,35 @@ import React, {useEffect, useState} from "react";
 import * as Clipboard from 'expo-clipboard';
 import LottieView from 'lottie-react-native';
 import {storeData, getData} from './storage';
+import * as Print from 'expo-print';
 
   const ScannedTextView = (props) => {
-    const {image, capturedImage, punjabi, setModalVisible} = props;
+    const {image, capturedImage, punjabi, setModalVisible, pdf} = props;
     const [copiedText, setCopiedText] = useState(false);
 
+    const html = `
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+  </head>
+  <body style="text-align: center;">
+    <h3 style="font-size: 30px; font-family: Helvetica Neue; font-weight: normal; margin-top: 100px;">
+     ${punjabi}
+    </h3>
+  </body>
+</html>
+`;
+    const printToFile = async () => {
+      try{
+        await Print.printAsync({
+          html,
+        })
+      } catch(err){
+
+      }
+
+    };
+  
     useEffect(() => {
         if(punjabi && punjabi.length > 0)
             storeData(punjabi);
@@ -49,7 +73,7 @@ import {storeData, getData} from './storage';
       }
     };
     return (
-        <SafeAreaView style={{backgroundColor: 'white'}}>
+        <SafeAreaView style={{backgroundColor: '#F6F5FC'}}>
           <View style={styles.header}>
             <Text style={{fontSize: 20}}>Extracted Text</Text>
             <TouchableOpacity style={{position: 'absolute', top: -3, left: 0, padding: 5}} onPress={() => setModalVisible(false)}><Ionicons name="chevron-back" size={24} color="black" /></TouchableOpacity>
@@ -57,7 +81,7 @@ import {storeData, getData} from './storage';
           <SafeAreaView
             style={styles.wrapper}
           >
-            <Image
+            {/* <Image
               source={{
                 uri: image ? image.uri : capturedImage.uri,
               }}
@@ -67,7 +91,7 @@ import {storeData, getData} from './storage';
                 height: 300,
                 marginTop: 20
               }}
-            />
+            /> */}
             <View style={{width: '100%', padding: 15, justifyContent: 'center', alignItems: 'center'}}>
             {!punjabi ?
               <LottieView
@@ -91,6 +115,10 @@ import {storeData, getData} from './storage';
             </View>
             <View style={styles.export}>
               <View style={styles.content}>
+                <TouchableOpacity onPress={printToFile}>
+                <AntDesign name="printer" size={26} color="black" />
+                <Text style={{marginTop: 5}}>Print</Text>
+                </TouchableOpacity>
               <TouchableOpacity style={{justifyContent: 'center', alignItems: 'center',}} onPress={copyToClipboard}>
                 <AntDesign name="copy1" size={26} color="black" />
                 <Text style={{marginTop: 5}}>{copiedText ? "Copied!" : "Copy"}</Text>
@@ -143,7 +171,7 @@ import {storeData, getData} from './storage';
       flexDirection: 'row',
       justifyContent:'space-between',
       alignItems: 'center',
-      width: '40%'
+      width: '60%'
     }
   });
   export default ScannedTextView;

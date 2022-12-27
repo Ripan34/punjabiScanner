@@ -32,13 +32,13 @@ function cacheImages(images) {
     }
   });
 }
-// Notifications.setNotificationHandler({
-//   handleNotification: async () => ({
-//     shouldShowAlert: true,
-//     shouldPlaySound: true,
-//     shouldSetBadge: true,
-//   }),
-// });
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+  }),
+});
 // Notifications.scheduleNotificationAsync({
 //   content: {
 //     title: "Checkout word of the day",

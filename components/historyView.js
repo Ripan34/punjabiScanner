@@ -12,11 +12,35 @@ import { Ionicons } from "@expo/vector-icons";
 import * as Clipboard from 'expo-clipboard';
 import { Feather } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
+import MontserratText from "./montserratText";
+import * as Print from 'expo-print';
 
 const HistoryView = ({ route, navigation }) => {
   const { text } = route.params;
   const [copiedText, setCopiedText] = useState(false);
+  const html = `
+  <html>
+    <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+    </head>
+    <body style="text-align: center;">
+      <h3 style="font-size: 30px; font-family: Helvetica Neue; font-weight: normal; margin-top: 100px;">
+       ${text}
+      </h3>
+    </body>
+  </html>
+  `;
+      const printToFile = async () => {
+        try{
+          await Print.printAsync({
+            html,
+          })
+        } catch(err){
 
+        }
+
+      };
+    
   const copyToClipboard = async () => {
     setCopiedText(false);
     await Clipboard.setStringAsync(text);
@@ -40,9 +64,9 @@ const HistoryView = ({ route, navigation }) => {
   };
 
   return (
-    <SafeAreaView style={{           backgroundColor: '#FFEEEB'    , height: '100%'}}>
+    <SafeAreaView style={{ height: '100%', backgroundColor: '#F6F5FC'}}>
       <View style={styles.header}>
-        <Text style={{ fontSize: 20 }}>Preview</Text>
+      <MontserratText style={{ fontSize: 20 }} val={"Preview"} />
         <TouchableOpacity
           style={{ position: "absolute", top: -3, left: 0, padding: 5 }}
           onPress={() => navigation.goBack()}
@@ -60,6 +84,10 @@ const HistoryView = ({ route, navigation }) => {
       </View>
       <View style={styles.export}>
               <View style={styles.content}>
+                <TouchableOpacity onPress={printToFile}>
+                <AntDesign name="printer" size={26} color="black" />
+                <Text style={{marginTop: 5}}>Print</Text>
+                </TouchableOpacity>
               <TouchableOpacity style={{justifyContent: 'center', alignItems: 'center',}} onPress={copyToClipboard}>
                 <AntDesign name="copy1" size={26} color="black" />
                 <Text style={{marginTop: 5}}>{copiedText ? "Copied!" : "Copy"}</Text>
@@ -105,7 +133,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent:'space-between',
     alignItems: 'center',
-    width: '40%'
+    width: '60%'
   }
 });
 export default HistoryView;
